@@ -1,0 +1,20 @@
+/usr/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /mnt/c/Users/Windows-Hamatum/Documents/GitHub/fairRepack-C-application
+CMake Error at CMakeLists.txt:9 (find_package):
+  By not providing "Findcurl.cmake" in CMAKE_MODULE_PATH this project has
+  asked CMake to find a package configuration file provided by "curl", but
+  CMake did not find one.
+
+  Could not find a package configuration file provided by "curl" with any of
+  the following names:
+
+    curlConfig.cmake
+    curl-config.cmake
+
+  Add the installation prefix of "curl" to CMAKE_PREFIX_PATH or set
+  "curl_DIR" to a directory containing one of the above files.  If "curl"
+  provides a separate development package or SDK, be sure it has been
+  installed.
+
+
+-- Configuring incomplete, errors occurred!
+See also "/mnt/c/Users/Windows-Hamatum/Documents/GitHub/fairRepack-C-application/cmake-build-debug/CMakeFiles/CMakeOutput.log".
