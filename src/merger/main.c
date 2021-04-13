@@ -11,7 +11,7 @@
 #include <string.h> // strcat()
 #include <dirent.h> // opendir(), readdir()
 
-char timeSetter();
+char dateStamp();
 void merger();
 
 int main(int argc, char *argv[]){
@@ -55,7 +55,7 @@ int merger(char *toMergeFileLocation){
     return EXIT_SUCCESS;
 }
 
-char timeSetter(){
+char dateStamp(){
     struct date d;
     char *dateStamp;
     getdate(&d);
