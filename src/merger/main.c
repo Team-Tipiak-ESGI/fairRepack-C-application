@@ -11,17 +11,23 @@
 #include <string.h> // strcat()
 #include <dirent.h> // opendir(), readdir()
 
+#define MERGE_DIR "DIR_LOCATION"
+#define MERGED_DIR "MERGED_DIR"
+
 char dateStamp();
 void merger();
 
-int main(int argc, char *argv[]){
+int main(void){
 
+    merger();
+    rename(MERGED_DIR/"mergeFile",dateStamp());
     return EXIT_SUCCESS;
 }
 
-int merger(char *toMergeFileLocation){
+int merger(){
 
-    DIR *d = opendir(path);
+    DIR *d = opendir(MERGE_DIR);
+    struct dirent *dir;
     char pointer;
     FILE *mergedFile = fopen("mergeFile", "a"); // append to the file + create if does not exists
     FILE *toMergeFile;
@@ -39,8 +45,9 @@ int merger(char *toMergeFileLocation){
                         fprintf(stderr, " Error, unable to open the file, failure at line %d, exiting...", __LINE__);
                         exit(EXIT_FAILURE);
                     } else {
+                        fputc('\n', mergedFile);
                         while ((pointer = fgetc(toMergeFile)) != EOF){
-                            fputc(ch,mergedFile);
+                            fputc(pointer,mergedFile);
                         }
                     }
                     fclose(toMergeFile);
@@ -61,5 +68,5 @@ char dateStamp(){
     getdate(&d);
     strcat(dateStamp,itoa(d.da_mon));
     strcat(dateStamp,itoa(d.da_year);
-    return dateStamp;
+    return dateStamp; //i.e "0421"
 }
