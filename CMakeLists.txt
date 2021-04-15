@@ -6,5 +6,10 @@ set(CMAKE_C_STANDARD 11)
 add_executable(extractor
         src/extractor/main.c)
 
-find_package(curl REQUIRED)
-target_link_libraries(extractor )
+add_executable(merger
+        src/merger/main.c)
+
+find_library(CURL REQUIRED)
+
+
+target_link_libraries(extractor)
