@@ -1,5 +1,5 @@
 //
-// Objective : Merge files that are in a
+// Objective : Merge files that are in a specific directory then the result are stored in another
 //
 //
 //
@@ -9,9 +9,9 @@
 #include <stdlib.h> // itoa()
 #include <string.h> // strcat()
 #include <dirent.h> // opendir(), readdir()
-#include <sys/stat.h>
-#include <errno.h>
-#include <time.h>
+#include <sys/stat.h> // file descriptor
+#include <errno.h> // errno macro
+#include <time.h> // used for dateStamp()
 
 #define MERGE_DIR "/var/www/fairrepack.sagliss.industries/ftp/toMergeFiles"
 #define MERGED_DIR "/var/www/fairrepack.sagliss.industries/ftp/mergedFiles"
