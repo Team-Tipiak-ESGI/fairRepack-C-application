@@ -11,7 +11,8 @@ add_executable(extractor
 add_executable(merger
         src/merger/main.c)
 
+set(CURL_LIBRARY "-lcurl")
+find_package(CURL REQUIRED)
 find_library(CURL REQUIRED)
-
-
-target_link_libraries(extractor)
+include_directories(${CURL_INCLUDE_DIR})
+target_link_libraries(extractor ${CURL_LIBRARIES})
