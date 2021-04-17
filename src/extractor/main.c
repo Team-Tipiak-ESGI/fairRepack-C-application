@@ -25,16 +25,16 @@ size_t read_callback(char *ptr, size_t size, size_t nmemb, void *userdata)
 
     time_t now;
     time(&now);
+
     struct tm *local = localtime(&now);
     char * str = malloc(10);
     char * filepath;
-    FILE * file;
 
+    FILE * file;
     Item * config = Configuration__loadFromFile("extractor.conf");
 
     char * warehouse_name = Item__getByKey(config, "warehouse_name")->value;
     char * warehouse_id = Item__getByKey(config, "warehouse_id")->value;
-
     char * filename = malloc(sizeof(warehouse_id) + sizeof(warehouse_name) + 5);
 
     // Build file name

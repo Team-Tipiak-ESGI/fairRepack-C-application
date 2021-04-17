@@ -1,10 +1,12 @@
+/* <DESC>
+ * FTP upload a file from memory
+ * </DESC>
+ */
 #include <stdio.h>
 #include <string.h>
 #include <curl/curl.h>
-#include <stdlib.h>
 
-#undef DISABLE_SSH_AGENT
-#define FTP_PATH "sftp://ftpuser@sagliss.industries/ftp"
+#define FTP_URL "sftp://213.32.6.40/ftp/test.txt"
 
 static const char data[]=
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
@@ -53,6 +55,7 @@ int main(void)
     upload.readptr = data;
     upload.sizeleft = strlen(data);
 
+    /* In windows, this will init the winsock stuff */
     res = curl_global_init(CURL_GLOBAL_DEFAULT);
     /* Check for errors */
     if(res != CURLE_OK) {
@@ -64,29 +67,21 @@ int main(void)
     /* get a curl handle */
     curl = curl_easy_init();
     if(curl) {
-        const char * filename = "file.txt";
-        char * filepath = malloc(sizeof(FTP_PATH) + strlen(filename) + 1);
+        /* First set the URL, the target file */
+        fprintf(stdout, "%s", FTP_URL);
+        curl_easy_setopt(curl, CURLOPT_URL, FTP_URL);
 
-        strcpy(filepath, FTP_PATH);
-        strcat(filepath, "/");
-        strcat(filepath, filename);
-        printf("%s", filepath);
-        curl_easy_setopt(curl, CURLOPT_URL, filepath);
+        /* Now specify we want to UPLOAD data */
+        curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L);
 
-    #ifndef DISABLE_SSH_AGENT
-        curl_easy_setopt(curl, CURLOPT_SSH_AUTH_TYPES, CURLSSH_AUTH_AGENT);
-    #endif
-
-
-        curl_easy_setopt(curl, CURLOPT_USERNAME, "ftpuser");
-        curl_easy_setopt(curl, CURLOPT_PASSWORD, "fairrepackFTPAgent2021");
-        curl_easy_setopt(curl, CURLOPT_UPLOAD, 1);
+        /* we want to use our own read function */
         curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_callback);
-        curl_easy_setopt(curl, CURLOPT_READDATA, &upload);
-        curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
 
-        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
+        /* pointer to pass to our read function */
+        curl_easy_setopt(curl, CURLOPT_READDATA, &upload);
+
+        /* get verbose debug output please */
+        curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
 
         /* Set the expected upload size. */
         curl_easy_setopt(curl, CURLOPT_INFILESIZE_LARGE,

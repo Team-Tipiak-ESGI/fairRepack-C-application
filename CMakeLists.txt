@@ -14,9 +14,14 @@ add_executable(merger
 add_executable(ftpmem
         src/extractor/ftpmem.c)
 
+
+add_executable(ftpmem2
+        src/extractor/ftpmem2.c)
+
 set(CURL_LIBRARY "-lcurl")
 find_package(CURL REQUIRED)
 find_library(CURL REQUIRED)
 include_directories(${CURL_INCLUDE_DIR})
 target_link_libraries(extractor ${CURL_LIBRARIES})
 target_link_libraries(ftpmem ${CURL_LIBRARIES})
+target_link_libraries(ftpmem2 ${CURL_LIBRARIES})
