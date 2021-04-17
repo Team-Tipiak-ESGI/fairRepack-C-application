@@ -6,14 +6,17 @@ set(CMAKE_C_STANDARD 11)
 add_executable(extractor
         src/extractor/Configuration.c src/extractor/Configuration.h
         src/extractor/Item.c src/extractor/Item.h
-        src/extractor/ftpmem.c
         src/extractor/main.c)
 
 add_executable(merger
         src/merger/main.c)
+
+add_executable(ftpmem
+        src/extractor/ftpmem.c)
 
 set(CURL_LIBRARY "-lcurl")
 find_package(CURL REQUIRED)
 find_library(CURL REQUIRED)
 include_directories(${CURL_INCLUDE_DIR})
 target_link_libraries(extractor ${CURL_LIBRARIES})
+target_link_libraries(ftpmem ${CURL_LIBRARIES})

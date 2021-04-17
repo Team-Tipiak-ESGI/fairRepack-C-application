@@ -15,6 +15,55 @@
 
 #include "Configuration.h"
 
+#define  FOLDER "/home/erwan"
+
+
+size_t read_callback(char *ptr, size_t size, size_t nmemb, void *userdata)
+{
+    // file name
+    //  id entrepôt/MMAA, par exemple 01paris0221.xml
+
+    time_t now;
+    time(&now);
+    struct tm *local = localtime(&now);
+    char * str = malloc(10);
+    char * filepath;
+    FILE * file;
+
+    Item * config = Configuration__loadFromFile("extractor.conf");
+
+    char * warehouse_name = Item__getByKey(config, "warehouse_name")->value;
+    char * warehouse_id = Item__getByKey(config, "warehouse_id")->value;
+
+    char * filename = malloc(sizeof(warehouse_id) + sizeof(warehouse_name) + 5);
+
+    // Build file name
+    strcpy(filename, warehouse_id);
+    strcat(filename, warehouse_name);
+
+    sprintf(str, "%d", local->tm_mon);
+    strcat(filename, str);
+
+    sprintf(str, "%d", local->tm_mday);
+    strcat(filename, str);
+
+    filepath = malloc(sizeof(FOLDER) + sizeof(filename) + 2);
+    strcpy(filepath, FOLDER);
+    strcat(filepath, filename);
+
+    printf("%s", filepath);
+
+    file = fopen(filepath, "w+");
+
+    free(str);
+
+    fputs(ptr, file);
+
+    fclose(file);
+
+    return 0;
+}
+
 
 int main(void){
     // Load from Configuration File
@@ -22,15 +71,14 @@ int main(void){
 
     char * api_url = Item__getByKey(config, "url")->value;
     char * warehouse_id = Item__getByKey(config, "warehouse_id")->value;
-    char *url = malloc(sizeof(api_url) + sizeof("?warehouse=") + sizeof(warehouse_id));
+    char * url = malloc(sizeof("https://") + sizeof(api_url) + sizeof("/api/stock/read.php?warehouse=") + sizeof(warehouse_id));
 
-    strcpy(url, api_url);
-    strcat(url, "?warehouse=");
+    strcpy(url, "https://");
+    strcat(url, api_url);
+    strcat(url, "/api/stock/read.php?warehouse=");
     strcat(url, warehouse_id);
 
-    printf("%s\n", Item__getByKey(config, "warehouse_name")->value);
-    printf("%s\n", Item__getByKey(config, "warehouse_id")->value);
-    printf("%s", url);
+    //char * url = "https://pa.quozul.dev/api/stock/read.php?warehouse=01";
 
     CURL *curl;
     CURLcode result;
@@ -38,6 +86,9 @@ int main(void){
     curl = curl_easy_init();
     if(curl){
         curl_easy_setopt(curl, CURLOPT_URL, url);
+        curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+        curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_callback);
+
         result = curl_easy_perform(curl);
         if (result != CURLE_OK)
             fprintf(stderr, "curl failed: %s\n", curl_easy_strerror(result));
