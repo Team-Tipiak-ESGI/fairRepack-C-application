@@ -41,15 +41,17 @@ size_t read_callback(char *ptr, size_t size, size_t nmemb, void *userdata)
     strcpy(filename, warehouse_id);
     strcat(filename, warehouse_name);
 
-    sprintf(str, "%d", local->tm_mon);
+    sprintf(str, "%02d", local->tm_mon + 1);
     strcat(filename, str);
 
     sprintf(str, "%d", local->tm_mday);
     strcat(filename, str);
 
-    filepath = malloc(sizeof(FOLDER) + sizeof(filename) + 2);
+    filepath = malloc(sizeof(FOLDER) + sizeof(filename) + 6);
     strcpy(filepath, FOLDER);
+    strcat(filepath, "/");
     strcat(filepath, filename);
+    strcat(filepath, ".xml");
 
     printf("%s", filepath);
 
@@ -87,11 +89,12 @@ int main(void){
     if(curl){
         curl_easy_setopt(curl, CURLOPT_URL, url);
         curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-        curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_callback);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, read_callback);
 
         result = curl_easy_perform(curl);
         if (result != CURLE_OK)
             fprintf(stderr, "curl failed: %s\n", curl_easy_strerror(result));
+
         curl_easy_cleanup(curl);
     } else {
         fprintf(stderr, "curl failed to init.\n");
