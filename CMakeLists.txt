@@ -6,6 +6,7 @@ set(CMAKE_C_STANDARD 11)
 add_executable(extractor
         src/extractor/Configuration.c src/extractor/Configuration.h
         src/extractor/Item.c src/extractor/Item.h
+        src/extractor/ftpmem.c
         src/extractor/main.c)
 
 add_executable(merger
