@@ -11,12 +11,11 @@
 #include <dirent.h> // opendir(), readdir()
 #include <sys/stat.h> // file descriptor
 #include <errno.h> // errno macro
-#include <time.h> // used for dateStamp()
+#include "../common/datestamp.h"
 
 #define MERGE_DIR "/var/www/fairrepack.sagliss.industries/ftp/toMergeFiles"
 #define MERGED_DIR "/var/www/fairrepack.sagliss.industries/ftp/mergedFiles"
 
-const char * dateStamp(char bool);
 int merger(void);
 void dirCreator(void);
 
@@ -67,7 +66,7 @@ int merger(void){
     FILE *toMergeFile;
 
     // Check if Files will open without resulting in a crash
-    if (mergedFile == NULL){ // file that get
+    if (mergedFile == NULL){ // file that get the file name
         fprintf(stderr," Error, unable to open the file, failure at line %d, exiting...", __LINE__);
         exit(EXIT_FAILURE);
     } else {
@@ -102,18 +101,3 @@ int merger(void){
     return EXIT_SUCCESS;
 }
 
-const char * dateStamp(char bool){
-    time_t now;
-    time(&now);
-    struct tm *local = localtime(&now);
-    char * dateStamp = malloc(10);
-    char * str = malloc(10);
-    sprintf(str, "%d", local->tm_mon);
-    strcat(dateStamp, str);
-    if(bool == 1) {
-        sprintf(str, "%d", local->tm_year);
-        strcat(dateStamp, str);
-    }
-    free(str);
-    return dateStamp; //i.e "0421"
-}

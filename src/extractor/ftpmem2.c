@@ -1,23 +1,9 @@
-/* <DESC>
- * FTP upload a file from memory
- * </DESC>
- */
+
 #include <stdio.h>
 #include <string.h>
 #include <curl/curl.h>
 
-#define FTP_URL "sftp://213.32.6.40/ftp/test.txt"
-
-static const char data[]=
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
-        "Nam rhoncus odio id venenatis volutpat. Vestibulum dapibus "
-        "bibendum ullamcorper. Maecenas finibus elit augue, vel "
-        "condimentum odio maximus nec. In hac habitasse platea dictumst. "
-        "Vestibulum vel dolor et turpis rutrum finibus ac at nulla. "
-        "Vivamus nec neque ac elit blandit pretium vitae maximus ipsum. "
-        "Quisque sodales magna vel erat auctor, sed pellentesque nisi "
-        "rhoncus. Donec vehicula maximus pretium. Aliquam eu tincidunt "
-        "lorem.";
+#define FTP_URL "sftp://fairrepack.sagliss.industries/ftp/test.txt"
 
 struct WriteThis {
     const char *readptr;
@@ -42,7 +28,7 @@ static size_t read_callback(char *ptr, size_t size, size_t nmemb, void *userp)
         return copylen;
     }
 
-    return 0;                          /* no more data left to deliver */
+    return 0;
 }
 
 int main(void)
@@ -75,7 +61,7 @@ int main(void)
         curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L);
 
         /* we want to use our own read function */
-        curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_callback);
+        curl_easy_setopt(curl, CURLOPT_READFUNCTION, write_callback);
 
         /* pointer to pass to our read function */
         curl_easy_setopt(curl, CURLOPT_READDATA, &upload);

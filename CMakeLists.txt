@@ -6,13 +6,15 @@ set(CMAKE_C_STANDARD 11)
 add_executable(extractor
         src/extractor/Configuration.c src/extractor/Configuration.h
         src/extractor/Item.c src/extractor/Item.h
+        src/common/datestamp.c src/common/datestamp.h
+        src/extractor/ftp.c src/extractor/ftp.h
         src/extractor/main.c)
 
 add_executable(merger
         src/merger/main.c)
 
 add_executable(ftpmem
-        src/extractor/ftpmem.c)
+        src/extractor/ftp.c)
 
 
 add_executable(ftpmem2

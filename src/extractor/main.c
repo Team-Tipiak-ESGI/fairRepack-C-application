@@ -8,21 +8,17 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
-#include <sys/stat.h>
+
 #include <curl/curl.h>
 #include <unistd.h>
 #include <stdlib.h>
 
 #include "Configuration.h"
-
+#include "ftp.h"
 #define  FOLDER "/home/erwan"
 
-
-size_t read_callback(char *ptr, size_t size, size_t nmemb, void *userdata)
+static size_t write_callback(char *ptr, size_t size, size_t nmemb, void *userdata)
 {
-    // file name
-    //  id entrepôt/MMAA, par exemple 01paris0221.xml
-
     time_t now;
     time(&now);
 
@@ -53,17 +49,16 @@ size_t read_callback(char *ptr, size_t size, size_t nmemb, void *userdata)
     strcat(filepath, filename);
     strcat(filepath, ".xml");
 
-    printf("%s", filepath);
-
     file = fopen(filepath, "w+");
 
     free(str);
-
+    free(filename);
     fputs(ptr, file);
 
     fclose(file);
 
-    return 0;
+    *((char **)userdata) = filepath;
+    return size * nmemb;
 }
 
 
@@ -80,27 +75,32 @@ int main(void){
     strcat(url, "/api/stock/read.php?warehouse=");
     strcat(url, warehouse_id);
 
-    //char * url = "https://pa.quozul.dev/api/stock/read.php?warehouse=01";
-
     CURL *curl;
     CURLcode result;
+
+    char * filepath;
 
     curl = curl_easy_init();
     if(curl){
         curl_easy_setopt(curl, CURLOPT_URL, url);
-        curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, read_callback);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &filepath);
 
         result = curl_easy_perform(curl);
         if (result != CURLE_OK)
             fprintf(stderr, "curl failed: %s\n", curl_easy_strerror(result));
 
+        printf("%s\n", filepath);
+        upload(filepath, curl);
         curl_easy_cleanup(curl);
     } else {
         fprintf(stderr, "curl failed to init.\n");
         return EXIT_FAILURE;
     }
 
+
     curl_global_cleanup();
+    free(filepath);
+    free(url);
     return EXIT_SUCCESS;
 }
