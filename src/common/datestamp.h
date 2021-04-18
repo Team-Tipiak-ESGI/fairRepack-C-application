@@ -8,4 +8,5 @@
 #endif //FAIRREPACK_C_APPLICATION_DATESTAMP_H
 
 #include <time.h>
-const char * dateStamp(char bool);
+const char * dateStamp(void);
+const char * monthStamp(void);

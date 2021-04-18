@@ -13,8 +13,11 @@
 #include <errno.h> // errno macro
 #include "../common/datestamp.h"
 
-#define MERGE_DIR "/var/www/fairrepack.sagliss.industries/ftp/toMergeFiles"
-#define MERGED_DIR "/var/www/fairrepack.sagliss.industries/ftp/mergedFiles"
+//#define MERGE_DIR "/var/www/fairrepack.sagliss.industries/ftp/toMergeFiles"
+//#define MERGED_DIR "/var/www/fairrepack.sagliss.industries/ftp/mergedFiles"
+
+#define MERGE_DIR "/home/erwan/toMergeFiles"
+#define MERGED_DIR "/home/erwan/mergedFiles"
 
 int merger(void);
 void dirCreator(void);
@@ -28,13 +31,12 @@ int main(void){
     strcpy(filepath, MERGE_DIR);
     strcat(filepath, "/mergeFile");
 
-    rename(filepath, dateStamp(0));
+    rename(filepath, dateStamp());
     return EXIT_SUCCESS;
 }
 
 void dirCreator(void){
-
-    const char *name = dateStamp(1);
+    const char *name = dateStamp();
     DIR *dir = opendir(MERGED_DIR);
     int dfd = dirfd(dir);
     errno = 0;
@@ -42,15 +44,16 @@ void dirCreator(void){
     if (ret == -1){
         switch (errno) {
             case EACCES:
-                fprintf(stderr, "unallowed to write in the parent dir, exiting.");
+                fprintf(stderr, "unallowed to write in the parent dir, exiting.\n");
                 exit(EXIT_FAILURE);
             case EEXIST:
-                fprintf(stderr,"warning: directory already exists.");
+                fprintf(stderr,"warning: directory already exists.\n");
+                break;
             case ENAMETOOLONG:
-                fprintf(stderr,"directory has a too long name, exiting.");
+                fprintf(stderr,"directory has a too long name, exiting.\n");
                 exit(EXIT_FAILURE);
             default:
-                fprintf(stderr, "mkdir failed, exiting.");
+                fprintf(stderr, "mkdir failed, exiting.\n");
                 exit(EXIT_FAILURE);
         }
     }
@@ -62,7 +65,20 @@ int merger(void){
     DIR *d = opendir(MERGE_DIR);
     struct dirent *dir;
     char pointer;
-    FILE *mergedFile = fopen("mergeFile", "a"); // append to the file + create if does not exists
+
+    // Chemin à générer : ${MERGE_DIR}/${month}.xml
+    char * savePath = malloc(sizeof(MERGE_DIR) + 8 + 4);
+    strcpy(savePath, MERGED_DIR);
+    strcat(savePath, "/");
+    strcat(savePath, dateStamp());
+    strcat(savePath, "/");
+    strcat(savePath, monthStamp());
+    strcat(savePath, ".xml");
+
+    FILE *mergedFile = fopen(savePath, "a+"); // append to the file + create if does not exists
+
+    free(savePath);
+
     FILE *toMergeFile;
 
     // Check if Files will open without resulting in a crash
@@ -74,10 +90,14 @@ int merger(void){
             while ((dir = readdir(d)) != NULL){
                 if (dir->d_type == DT_REG) { /* If the entry is a regular file */
                     char * toMergeFileLocation = malloc(sizeof(MERGE_DIR) + sizeof(dir->d_name) + 1);
+
                     strcpy(toMergeFileLocation, MERGE_DIR);
                     strcat(toMergeFileLocation, "/");
                     strcat(toMergeFileLocation, dir->d_name);
                     toMergeFile = fopen(toMergeFileLocation, "r");
+
+                    printf("%s\n", toMergeFileLocation);
+
                     if (toMergeFile == NULL) { // file that give
                         fprintf(stderr, " Error, unable to open the file, failure at line %d, exiting...", __LINE__);
                         exit(EXIT_FAILURE);
@@ -97,6 +117,7 @@ int merger(void){
             exit(EXIT_FAILURE);
         }
     }
+
     fclose(mergedFile);
     return EXIT_SUCCESS;
 }
