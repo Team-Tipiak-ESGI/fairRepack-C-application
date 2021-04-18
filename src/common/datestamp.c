@@ -1,4 +1,7 @@
 #include "datestamp.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 const char * dateStamp(char bool){
     time_t now;
