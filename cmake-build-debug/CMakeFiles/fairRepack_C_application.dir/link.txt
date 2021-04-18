@@ -1,1 +1,0 @@
-/usr/bin/cc -g   CMakeFiles/fairRepack_C_application.dir/src/extractor/main.c.o  -o fairRepack_C_application 

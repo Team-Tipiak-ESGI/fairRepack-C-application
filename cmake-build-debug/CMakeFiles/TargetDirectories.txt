@@ -1,3 +1,0 @@
-/mnt/c/Users/Windows-Hamatum/Documents/GitHub/fairRepack-C-application/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/mnt/c/Users/Windows-Hamatum/Documents/GitHub/fairRepack-C-application/cmake-build-debug/CMakeFiles/edit_cache.dir
-/mnt/c/Users/Windows-Hamatum/Documents/GitHub/fairRepack-C-application/cmake-build-debug/CMakeFiles/fairRepack_C_application.dir
