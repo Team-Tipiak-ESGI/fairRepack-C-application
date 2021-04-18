@@ -8,7 +8,7 @@ add_executable(extractor
         src/extractor/Item.c src/extractor/Item.h
         src/common/datestamp.c src/common/datestamp.h
         src/extractor/ftp.c src/extractor/ftp.h
-        src/extractor/main.c)
+        src/extractor/main.c src/extractor/Location.h)
 
 add_executable(merger
         src/merger/main.c)

@@ -7,4 +7,5 @@
 
 #endif //FAIRREPACK_C_APPLICATION_FTP_H
 
-int upload(char *filePath, CURL *curl);
+#include "Location.h"
+int upload(struct Location *location, CURL *curl);

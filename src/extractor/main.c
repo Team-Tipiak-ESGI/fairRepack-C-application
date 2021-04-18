@@ -10,7 +10,6 @@
 #include <sys/types.h>
 
 #include <curl/curl.h>
-#include <unistd.h>
 #include <stdlib.h>
 
 #include "Configuration.h"
@@ -31,7 +30,7 @@ static size_t write_callback(char *ptr, size_t size, size_t nmemb, void *userdat
 
     char * warehouse_name = Item__getByKey(config, "warehouse_name")->value;
     char * warehouse_id = Item__getByKey(config, "warehouse_id")->value;
-    char * filename = malloc(sizeof(warehouse_id) + sizeof(warehouse_name) + 5);
+    char * filename = malloc(sizeof(warehouse_id) + sizeof(warehouse_name) + 9);
 
     // Build file name
     strcpy(filename, warehouse_id);
@@ -42,22 +41,25 @@ static size_t write_callback(char *ptr, size_t size, size_t nmemb, void *userdat
 
     sprintf(str, "%d", local->tm_mday);
     strcat(filename, str);
+    strcat(filename, ".xml");
 
     filepath = malloc(sizeof(FOLDER) + sizeof(filename) + 6);
     strcpy(filepath, FOLDER);
     strcat(filepath, "/");
     strcat(filepath, filename);
-    strcat(filepath, ".xml");
 
     file = fopen(filepath, "w+");
 
     free(str);
-    free(filename);
     fputs(ptr, file);
 
     fclose(file);
 
-    *((char **)userdata) = filepath;
+    struct Location *location = malloc(sizeof(struct Location));
+    location->filepath = filepath;
+    location->filename = filename;
+
+    *((struct Location **)userdata) = location;
     return size * nmemb;
 }
 
@@ -78,20 +80,20 @@ int main(void){
     CURL *curl;
     CURLcode result;
 
-    char * filepath;
+    struct Location *location;
 
     curl = curl_easy_init();
     if(curl){
         curl_easy_setopt(curl, CURLOPT_URL, url);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &filepath);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &location);
 
         result = curl_easy_perform(curl);
         if (result != CURLE_OK)
             fprintf(stderr, "curl failed: %s\n", curl_easy_strerror(result));
 
-        printf("%s\n", filepath);
-        upload(filepath, curl);
+        printf("%s\n", location->filename);
+        upload(location, curl);
         curl_easy_cleanup(curl);
     } else {
         fprintf(stderr, "curl failed to init.\n");
@@ -100,7 +102,6 @@ int main(void){
 
 
     curl_global_cleanup();
-    free(filepath);
     free(url);
     return EXIT_SUCCESS;
 }

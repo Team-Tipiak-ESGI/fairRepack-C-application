@@ -16,7 +16,7 @@ Item * Configuration__loadFromFile(char * filepath) {
         printf("Config file not found, creating it...\n");
         file = fopen(filepath, "wb");
 
-        fputs("warehouse_id:01\nwarehouse_name:Paris\nurl:https://fairrepack.sagliss.industries/api/stock/read.php\0", file);
+        fputs("warehouse_id:01\nwarehouse_name:Paris\nurl:pa.quozul.dev\0", file);
 
         fclose(file);
 
