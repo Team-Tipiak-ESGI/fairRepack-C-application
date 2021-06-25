@@ -1,6 +1,4 @@
-//
-// Created by simon on 2021-04-17.
-//
+// Header datestamp
 
 #ifndef FAIRREPACK_C_APPLICATION_DATESTAMP_H
 #define FAIRREPACK_C_APPLICATION_DATESTAMP_H

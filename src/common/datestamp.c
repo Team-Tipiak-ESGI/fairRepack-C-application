@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
+//get date timestamp
 const char * dateStamp(void){
     time_t now;
     time(&now);
@@ -19,6 +20,7 @@ const char * dateStamp(void){
     return dateStamp;
 }
 
+// get months timestamp
 const char * monthStamp(void){
     time_t now;
     time(&now);
