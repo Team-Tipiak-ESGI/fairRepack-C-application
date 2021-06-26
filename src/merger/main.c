@@ -1,9 +1,6 @@
 //
 // Objective : Merge files that are in a specific directory then the result are stored in another
 //
-//
-//
-//
 
 #include <stdio.h> // fputc(), frpintf()
 #include <stdlib.h> // itoa()
@@ -13,11 +10,8 @@
 #include <errno.h> // errno macro
 #include "../common/datestamp.h"
 
-//#define MERGE_DIR "/var/www/fairrepack.sagliss.industries/ftp/toMergeFiles"
-//#define MERGED_DIR "/var/www/fairrepack.sagliss.industries/ftp/mergedFiles"
-
-#define MERGE_DIR "/home/erwan/toMergeFiles"
-#define MERGED_DIR "/home/erwan/mergedFiles"
+#define MERGE_DIR "/var/www/fairrepack.sagliss.industries/ftp/toMergeFiles"
+#define MERGED_DIR "/var/www/fairrepack.sagliss.industries/ftp/mergedFiles"
 
 int merger(void);
 void dirCreator(void);
